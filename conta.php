@@ -25,11 +25,18 @@ function registrar(&$historico, $mensagem) {
 }
 
 function sacar(&$saldo, $valor, &$historico) {
+    if (!is_numeric($valor) || $valor <= 0) {
+        echo "Valor de saque inválido!\n";
+        registrar($historico, "Tentativa de saque com valor inválido: $valor");
+        return false;
+    }
+
     if ($valor > $saldo) {
         echo "Saldo insuficiente!\n";
         registrar($historico, "Tentativa de saque R$" . number_format($valor, 2) . " - saldo insuficiente.");
         return false;
     }
+
     $saldo -= $valor;
     echo "Saque de R$" . number_format($valor, 2) . " realizado!\n";
     registrar($historico, "Saque de R$" . number_format($valor, 2));
@@ -37,11 +44,12 @@ function sacar(&$saldo, $valor, &$historico) {
 }
 
 function depositar(&$saldo, $valor, &$historico) {
-    if ($valor <= 0) {
-        echo "Valor inválido!\n";
-        registrar($historico, "Tentativa de depósito inválido: R$" . number_format($valor, 2));
+    if (!is_numeric($valor) || $valor <= 0) {
+        echo "Valor de depósito inválido!\n";
+        registrar($historico, "Tentativa de depósito inválido: $valor");
         return false;
     }
+
     $saldo += $valor;
     echo "Depósito de R$" . number_format($valor, 2) . " realizado!\n";
     registrar($historico, "Depósito de R$" . number_format($valor, 2));
@@ -60,12 +68,12 @@ do {
             break;
         case 2:
             echo "Digite o valor a sacar: ";
-            $valor = (float) fgets(STDIN);
+            $valor = trim(fgets(STDIN));
             sacar($saldo, $valor, $historico);
             break;
         case 3:
             echo "Digite o valor a depositar: ";
-            $valor = (float) fgets(STDIN);
+            $valor = trim(fgets(STDIN));
             depositar($saldo, $valor, $historico);
             break;
         case 4:
