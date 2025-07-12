@@ -1,11 +1,10 @@
 <?php
 
 // Inicialização das variáveis
-$saldo = 1_000.00; // Saldo inicial
-$titular = "Wanderson Vitor"; // Titular da conta
+$saldo = 1_000.00;
+$titular = "Wanderson Vitor";
 $opcao = 0;
 
-// Função para exibir o menu
 function exibirMenu($saldo, $titular) {
     echo "******************\n";
     echo "Titular: $titular\n";
@@ -19,11 +18,30 @@ function exibirMenu($saldo, $titular) {
     echo "******************\n";
 }
 
-// Loop principal do programa
+function sacar(&$saldo, $valor) {
+    if ($valor > $saldo) {
+        echo "Saldo insuficiente!\n";
+        return false;
+    }
+    $saldo -= $valor;
+    echo "Saque de R$" . number_format($valor, 2) . " realizado!\n";
+    return true;
+}
+
+function depositar(&$saldo, $valor) {
+    if ($valor <= 0) {
+        echo "Valor inválido!\n";
+        return false;
+    }
+    $saldo += $valor;
+    echo "Depósito de R$" . number_format($valor, 2) . " realizado!\n";
+    return true;
+}
+
 do {
-    exibirMenu($saldo, $titular); // Exibe o menu
+    exibirMenu($saldo, $titular);
     echo "Escolha uma opção: ";
-    $opcao = (int) fgets(STDIN); // Lê a opção do usuário
+    $opcao = (int) fgets(STDIN);
 
     switch ($opcao) {
         case 1:
@@ -31,22 +49,16 @@ do {
             break;
         case 2:
             echo "Digite o valor a sacar: ";
-            $valorSacar = (float) fgets(STDIN);
-            if ($valorSacar > $saldo) {
-                echo "Saldo insuficiente!\n";
-            } else {
-                $saldo -= $valorSacar;
-                echo "Saque realizado com sucesso!\n";
-            }
+            $valor = (float) fgets(STDIN);
+            sacar($saldo, $valor);
             break;
         case 3:
             echo "Digite o valor a depositar: ";
-            $valorDepositar = (float) fgets(STDIN);
-            $saldo += $valorDepositar;
-            echo "Depósito realizado com sucesso!\n";
+            $valor = (float) fgets(STDIN);
+            depositar($saldo, $valor);
             break;
         case 4:
-            echo "Adeus!\n";
+            echo "Obrigado por usar nosso sistema! até mais =D\n";
             break;
         default:
             echo "Opção inválida!\n";
